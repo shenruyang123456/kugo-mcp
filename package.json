@@ -1,0 +1,8 @@
+{
+  "name": "kugo-mcp",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Unified MCP for the Windows KuGou client and music metadata",
+  "engines": { "node": ">=20" },
+  "dependencies": { "@eldment/meting-agent": "1.6.11" }
+}
