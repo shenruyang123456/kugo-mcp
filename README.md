@@ -1,0 +1,2 @@
+# kugo-mcp
+kugo-mcp
