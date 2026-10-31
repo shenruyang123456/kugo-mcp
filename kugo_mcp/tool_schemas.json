@@ -1,0 +1,422 @@
+[
+  {
+    "name": "kugou_get_playback",
+    "description": "读取官方酷狗当前歌曲、播放状态及队列来源。停止状态不等于接口失败。",
+    "inputSchema": {
+      "properties": {},
+      "title": "kugou_get_playbackArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "kugou_get_daily_recommendations",
+    "description": "读取当前官方PC客户端账户的每日推荐，返回曲序和歌曲；不读取或导出账户凭据。",
+    "inputSchema": {
+      "properties": {},
+      "title": "kugou_get_daily_recommendationsArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "kugou_play_daily_recommendations",
+    "description": "在官方客户端加载每日推荐并从指定曲序播放；替换临时队列，不改收藏。模式另用set_play_mode。",
+    "inputSchema": {
+      "properties": {
+        "start_index": {
+          "default": 1,
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Start Index",
+          "type": "integer"
+        }
+      },
+      "title": "kugou_play_daily_recommendationsArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "kugou_get_favorites",
+    "description": "读取当前账户的收藏歌曲，默认“我喜欢”；可指定收藏歌单名称，按offset/limit分页。不导出账户凭据。",
+    "inputSchema": {
+      "properties": {
+        "collection_name": {
+          "default": "我喜欢",
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Collection Name",
+          "type": "string"
+        },
+        "offset": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Offset",
+          "type": "integer"
+        },
+        "limit": {
+          "default": 50,
+          "maximum": 200,
+          "minimum": 1,
+          "title": "Limit",
+          "type": "integer"
+        }
+      },
+      "title": "kugou_get_favoritesArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "kugou_control_playback",
+    "description": "明确播放或暂停，调用客户端原生接口并读回验证。",
+    "inputSchema": {
+      "properties": {
+        "action": {
+          "enum": [
+            "play",
+            "pause"
+          ],
+          "title": "Action",
+          "type": "string"
+        }
+      },
+      "required": [
+        "action"
+      ],
+      "title": "kugou_control_playbackArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "kugou_get_play_mode",
+    "description": "读取酷狗模式按钮的实际名称。此功能使用Windows可访问性接口，不调用Windows-MCP。",
+    "inputSchema": {
+      "properties": {},
+      "title": "kugou_get_play_modeArguments",
+      "type": "object"
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false
+    }
+  },
+  {
+    "name": "platforms",
+    "title": "List Supported Platforms",
+    "description": "List supported music platforms.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {}
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "search",
+    "title": "Search Music",
+    "description": "Search songs, albums or artists on a specific platform.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "netease",
+            "tencent",
+            "kugou",
+            "kuwo"
+          ],
+          "description": "Music platform code."
+        },
+        "cookie": {
+          "description": "Optional platform cookie. Lower priority than METING_<PLATFORM>_COOKIE and METING_COOKIE.",
+          "type": "string"
+        },
+        "keyword": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Search keyword."
+        },
+        "type": {
+          "description": "Optional platform-specific search type.",
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "page": {
+          "description": "Optional page number.",
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "limit": {
+          "description": "Optional page size.",
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "platform",
+        "keyword"
+      ]
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "song",
+    "title": "Get Song Details",
+    "description": "Get song detail by id.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "netease",
+            "tencent",
+            "kugou",
+            "kuwo"
+          ],
+          "description": "Music platform code."
+        },
+        "cookie": {
+          "description": "Optional platform cookie. Lower priority than METING_<PLATFORM>_COOKIE and METING_COOKIE.",
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Song id."
+        }
+      },
+      "required": [
+        "platform",
+        "id"
+      ]
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "album",
+    "title": "Get Album Details",
+    "description": "Get album detail by id.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "netease",
+            "tencent",
+            "kugou",
+            "kuwo"
+          ],
+          "description": "Music platform code."
+        },
+        "cookie": {
+          "description": "Optional platform cookie. Lower priority than METING_<PLATFORM>_COOKIE and METING_COOKIE.",
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Album id."
+        }
+      },
+      "required": [
+        "platform",
+        "id"
+      ]
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "artist",
+    "title": "Get Artist Works",
+    "description": "Get artist songs by id.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "netease",
+            "tencent",
+            "kugou",
+            "kuwo"
+          ],
+          "description": "Music platform code."
+        },
+        "cookie": {
+          "description": "Optional platform cookie. Lower priority than METING_<PLATFORM>_COOKIE and METING_COOKIE.",
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Artist id."
+        },
+        "limit": {
+          "description": "Optional result size.",
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 200
+        }
+      },
+      "required": [
+        "platform",
+        "id"
+      ]
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "playlist",
+    "title": "Get Playlist Details",
+    "description": "Get playlist detail by id.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "netease",
+            "tencent",
+            "kugou",
+            "kuwo"
+          ],
+          "description": "Music platform code."
+        },
+        "cookie": {
+          "description": "Optional platform cookie. Lower priority than METING_<PLATFORM>_COOKIE and METING_COOKIE.",
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Playlist id."
+        }
+      },
+      "required": [
+        "platform",
+        "id"
+      ]
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "lyric",
+    "title": "Get Lyrics",
+    "description": "Get song lyric by id.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "netease",
+            "tencent",
+            "kugou",
+            "kuwo"
+          ],
+          "description": "Music platform code."
+        },
+        "cookie": {
+          "description": "Optional platform cookie. Lower priority than METING_<PLATFORM>_COOKIE and METING_COOKIE.",
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Song id."
+        }
+      },
+      "required": [
+        "platform",
+        "id"
+      ]
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  {
+    "name": "pic",
+    "title": "Get Cover Image",
+    "description": "Get cover or picture url by id. For Tencent Music, prefer square sizes 300, 500, 800, or 1200 because other custom sizes may return 404.",
+    "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "netease",
+            "tencent",
+            "kugou",
+            "kuwo"
+          ],
+          "description": "Music platform code."
+        },
+        "cookie": {
+          "description": "Optional platform cookie. Lower priority than METING_<PLATFORM>_COOKIE and METING_COOKIE.",
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Picture id."
+        },
+        "size": {
+          "description": "Optional picture size. Tencent Music cover URLs are most reliable with square sizes 300, 500, 800, or 1200; other sizes may return 404.",
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "platform",
+        "id"
+      ]
+    },
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  }
+]
